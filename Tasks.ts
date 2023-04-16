@@ -1,6 +1,8 @@
 import "./Utils & Constants";
 
-// Main function
+/**
+ * Generates Tasks from the selected meals (mon - fri) in the "Weekly Meal Plan" sheet
+*/
 async function CreateMealPlanTasks() {
   // Main task
   const mealPlanTaskList = GetOrCreateMealPlanTaskList();
@@ -30,7 +32,12 @@ async function CreateMealPlanTasks() {
   // console.log(errs)
 }
 
-const ingredientsToSubTasks = (parentTask, ingredientsArr) => {
+/**
+ * Generates new tasks from ingredients as a child of the given parent task
+ * @param parentTask The parent Task to
+ * @param ingredientsArr The ingredients
+ */
+const ingredientsToSubTasks = (parentTask: GoogleAppsScript.Tasks.Schema.Task, ingredientsArr: Array<string>) => {
   const taskList = GetTaskList(MealPlansTaskName);
   ingredientsArr.forEach(ingredient => {
     let ingredientTask = Tasks.newTask();
@@ -41,8 +48,12 @@ const ingredientsToSubTasks = (parentTask, ingredientsArr) => {
   });
 };
 
-
-function CreateSubTasks(dayCol) {
+/**
+ * Generates Tasks for each given day
+ * @param dayCol Day sheet column number (A is 1, B is 2, etc.)
+ * @returns Array of created Tasks
+ */
+function CreateSubTasks(dayCol: number) {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Weekly Meal Plan");
   const taskList = GetTaskList(MealPlansTaskName);
 
@@ -78,6 +89,10 @@ function CreateSubTasks(dayCol) {
   return [ lunchTask, dinnerTask, snacksTask, treatTask ];
 }
 
+/**
+ * Grabs or creates a TaskList with the MealPlansTaskName
+ * @returns The created or grabbed TaskList
+ */
 function GetOrCreateMealPlanTaskList() {
   try { return GetTaskList(MealPlansTaskName); }
   catch {
@@ -88,23 +103,40 @@ function GetOrCreateMealPlanTaskList() {
   }
 }
 
-function GetTaskList(taskListName) {
+/**
+ * Grabs the TaskList with the given name, if it exists
+ * @param taskListName 
+ * @returns TaskList, if it exists
+ */
+function GetTaskList(taskListName: string) {
   const taskList = Tasks.Tasklists.list().items.find(taskList => taskList.title == taskListName);
   if (taskList == undefined) throw new Error(`${taskListName} could not be found`);
   return taskList;
 }
 
-function GetTask(taskName, taskListName) {
+/**
+ * Grabs the Task with the given name, if it exists
+ * @param taskName 
+ * @param taskListName The parent TaskList name
+ * @returns Task, if it exists
+ */
+function GetTask(taskName: string, taskListName: string) {
   const task = Tasks.Tasks.list(GetTaskList(taskListName).id).items.find(task => task.title == taskName);
   if (task == undefined) throw new Error(`${taskName} could not be found`);
   return task;
 }
 
-function GetIngredients(mealName, dbColumn) {
+/**
+ * Grabs ingredients from the Database sheet given the database column
+ * @param mealName The meal name to grab ingredients from
+ * @param dbColumn The Database column to grab ingredients from
+ * @returns Array<string> of ingredients 
+ */
+function GetIngredients(mealName: string, dbColumn: number): Array<string> {
   const ingredientSheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Database");
   const ingredientRange = ingredientSheet.getRange(2, dbColumn, ingredientSheet.getLastRow(), 2);
 
-  let ingredients = new Array();
+  let ingredients = new Array<string>();
   ingredientRange
     .getValues()
     .forEach(row => {
