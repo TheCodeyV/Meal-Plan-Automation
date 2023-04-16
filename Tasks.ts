@@ -1,25 +1,28 @@
+import "./Utils & Constants";
+
+// Main function
 async function CreateMealPlanTasks() {
   // Main task
   const mealPlanTaskList = GetOrCreateMealPlanTaskList();
   // const nextMondayDate = getNextMonday();
 
   // Sub tasks
-  const fridaySubTasks = CreateSubTasks(FridayCol, mealPlanTaskList);
-  const thursdaySubTasks = CreateSubTasks(ThursdayCol, mealPlanTaskList);
-  const wednesdaySubTasks = CreateSubTasks(WednesdayCol, mealPlanTaskList);
-  const tuesdaySubTasks = CreateSubTasks(TuesdayCol, mealPlanTaskList);
-  const mondaySubTasks = CreateSubTasks(MondayCol, mealPlanTaskList);
+  const fridaySubTasks = CreateSubTasks(FridayCol);
+  const thursdaySubTasks = CreateSubTasks(ThursdayCol);
+  const wednesdaySubTasks = CreateSubTasks(WednesdayCol);
+  const tuesdaySubTasks = CreateSubTasks(TuesdayCol);
+  const mondaySubTasks = CreateSubTasks(MondayCol);
 
   let errs = new Array();
   // Add artificial sleep so we don't exceed quota 
   Utilities.sleep(7500);
 
-  [mondaySubTasks, tuesdaySubTasks, wednesdaySubTasks, thursdaySubTasks, fridaySubTasks]
+  [ mondaySubTasks, tuesdaySubTasks, wednesdaySubTasks, thursdaySubTasks, fridaySubTasks ]
     .forEach((daySubTasks, index) => {
       daySubTasks.forEach((task) => {
         let date = getNextMonday();
         date.setDate(date.getDate() + index - 1);
-        console.log(index, date);
+        console.log(index.toLocaleString(), date);
         task.due = date.toISOString();
         try { task = Tasks.Tasks.update(task, mealPlanTaskList.id, task.id); } catch (err) { errs.push(err); }
       });
@@ -35,8 +38,9 @@ const ingredientsToSubTasks = (parentTask, ingredientsArr) => {
     ingredientTask = Tasks.Tasks.insert(ingredientTask, taskList.id, { parent: parentTask.id });
     // console.log(parentTask)
     // console.log(ingredientTask)
-  })
-}
+  });
+};
+
 
 function CreateSubTasks(dayCol) {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Weekly Meal Plan");
@@ -71,7 +75,7 @@ function CreateSubTasks(dayCol) {
   }
   // Add artificial sleep so we don't exceed quota 
   Utilities.sleep(750);
-  return [lunchTask, dinnerTask, snacksTask, treatTask];
+  return [ lunchTask, dinnerTask, snacksTask, treatTask ];
 }
 
 function GetOrCreateMealPlanTaskList() {
@@ -86,13 +90,13 @@ function GetOrCreateMealPlanTaskList() {
 
 function GetTaskList(taskListName) {
   const taskList = Tasks.Tasklists.list().items.find(taskList => taskList.title == taskListName);
-  if (taskList == undefined) throw new Error(`${taskListName} could not be found`)
+  if (taskList == undefined) throw new Error(`${taskListName} could not be found`);
   return taskList;
 }
 
 function GetTask(taskName, taskListName) {
   const task = Tasks.Tasks.list(GetTaskList(taskListName).id).items.find(task => task.title == taskName);
-  if (task == undefined) throw new Error(`${taskName} could not be found`)
+  if (task == undefined) throw new Error(`${taskName} could not be found`);
   return task;
 }
 
@@ -104,8 +108,8 @@ function GetIngredients(mealName, dbColumn) {
   ingredientRange
     .getValues()
     .forEach(row => {
-      if (row[0] != mealName) return;
-      else ingredients.push(row[1])
+      if (row[ 0 ] != mealName) return;
+      else ingredients.push(row[ 1 ]);
     });
   return ingredients.sort().reverse();
 }
