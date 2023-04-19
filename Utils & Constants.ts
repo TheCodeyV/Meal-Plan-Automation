@@ -25,6 +25,18 @@ const SidesDBCol = 10;
 const SnacksDBCol = 13;
 const TreatsDBCol = 16;
 
+function ResetMeals() {
+  const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Weekly Meal Plan");
+  const MaxRows = TreatRow - BreakfastRow + 1;
+  [ MondayCol, TuesdayCol, WednesdayCol, ThursdayCol, FridayCol ]
+    .forEach(dayCol => {
+      const dayrange = sheet.getRange(BreakfastRow, dayCol - 1, MaxRows, 2);
+      let dayRangeValues: string[][] = dayrange.getValues();
+      dayRangeValues.forEach(row => row[ 1 ] = row[ 0 ]);
+      dayrange.setValues(dayRangeValues);
+    });
+}
+
 function getNextMonday() {
   var nextMonday = new Date();
   nextMonday.setDate(nextMonday.getDate() + (7 - nextMonday.getDay()) % 7 + 1);

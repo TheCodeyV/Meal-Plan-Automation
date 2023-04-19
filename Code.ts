@@ -3,6 +3,6 @@ function onOpen(e) {
     .createMenu("Automation")
     // .addItem("Login to Google OAuth2.0", "showSidebar")
     .addItem("Create Meal Plan Tasks", "CreateMealPlanTasks")
-    .addItem("Reset", "Reset")
+    .addItem("Reset Meals", "ResetMeals")
     .addToUi();
 }
