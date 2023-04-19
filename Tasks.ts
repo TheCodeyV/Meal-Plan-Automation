@@ -25,8 +25,10 @@ async function CreateMealPlanTasks() {
         let date = getNextMonday();
         date.setDate(date.getDate() + index);
         console.log(index.toLocaleString(), date);
-        task.due = date.toISOString();
-        try { task = Tasks.Tasks.update(task, mealPlanTaskList.id, task.id); } catch (err) { errs.push(err); }
+        try {
+          task.due = date.toISOString();
+          task = Tasks.Tasks.update(task, mealPlanTaskList.id, task.id);
+        } catch (err) { errs.push(err); }
       });
     });
   // console.log(errs)
@@ -57,8 +59,9 @@ function CreateSubTasks(dayCol: number) {
 
   const createMealTask = (mealRow: number, dbCol: number): GoogleAppsScript.Tasks.Schema.Task => {
     let task = Tasks.newTask();
-    // if (task.title != NoIncludeTBD) { }
     task.title = sheet.getRange(mealRow, dayCol).getValue();
+    // If the meal name is the default value (e.g. Lunch is Lunch), don't make task
+    if (task.title == sheet.getRange(mealRow, dayCol - 1).getValue()) return;
     task = Tasks.Tasks.insert(task, taskList.id);
     ingredientsToSubTasks(task, GetIngredients(task.title, dbCol));
     return task;
