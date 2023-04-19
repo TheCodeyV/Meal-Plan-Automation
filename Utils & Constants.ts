@@ -1,19 +1,29 @@
 const MealPlansTaskName = "Meal Plans";
-const NoIncludeTBD = "TBD";
-const LunchRow = 2;
-const DinnerRow = 4;
-const SnacksRow = 6;
-const TreatRow = 8;
+// const NoIncludeTBD = "TBD";
 
-const MondayCol = 2;
-const TuesdayCol = 6;
-const WednesdayCol = 10;
-const ThursdayCol = 14;
-const FridayCol = 18;
+// Meals / Sides
+const BreakfastRow = 2;
+const LunchRow = 4;
+const LunchSideRow = 5;
+const DinnerRow = 7;
+const DinnerSideRow = 8;
+const SnacksRow = 10;
+const TreatRow = 12;
 
-const LunchAndDinnerDBCol = 1;
-const SnacksDBCol = 4;
-const TreatsDBCol = 7;
+// Week Days
+const MondayCol = 1;
+const TuesdayCol = 4;
+const WednesdayCol = 7;
+const ThursdayCol = 10;
+const FridayCol = 13;
+
+// Database
+const BreakfastDBCol = 1;
+const LunchDBCol = 4;
+const DinnerDBCol = 7;
+const SidesDBCol = 10;
+const SnacksDBCol = 13;
+const TreatsDBCol = 16;
 
 function getNextMonday() {
   var nextMonday = new Date();
@@ -22,5 +32,5 @@ function getNextMonday() {
 }
 
 function logNextMonday() {
-  console.log(getNextMonday())
+  console.log(getNextMonday());
 }
