@@ -11,11 +11,11 @@ const SnacksRow = 10;
 const TreatRow = 12;
 
 // Week Days
-const MondayCol = 1;
-const TuesdayCol = 4;
-const WednesdayCol = 7;
-const ThursdayCol = 10;
-const FridayCol = 13;
+const MondayCol = 2;
+const TuesdayCol = 5;
+const WednesdayCol = 8;
+const ThursdayCol = 11;
+const FridayCol = 14;
 
 // Database
 const BreakfastDBCol = 1;

@@ -23,7 +23,7 @@ async function CreateMealPlanTasks() {
     .forEach((daySubTasks, index) => {
       daySubTasks.forEach((task) => {
         let date = getNextMonday();
-        date.setDate(date.getDate() + index - 1);
+        date.setDate(date.getDate() + index);
         console.log(index.toLocaleString(), date);
         task.due = date.toISOString();
         try { task = Tasks.Tasks.update(task, mealPlanTaskList.id, task.id); } catch (err) { errs.push(err); }
@@ -43,8 +43,6 @@ const ingredientsToSubTasks = (parentTask: GoogleAppsScript.Tasks.Schema.Task, i
     let ingredientTask = Tasks.newTask();
     ingredientTask.title = ingredient;
     ingredientTask = Tasks.Tasks.insert(ingredientTask, taskList.id, { parent: parentTask.id });
-    // console.log(parentTask)
-    // console.log(ingredientTask)
   });
 };
 
@@ -57,36 +55,26 @@ function CreateSubTasks(dayCol: number) {
   const sheet = SpreadsheetApp.getActiveSpreadsheet().getSheetByName("Weekly Meal Plan");
   const taskList = GetTaskList(MealPlansTaskName);
 
-  let treatTask = Tasks.newTask();
-  treatTask.title = sheet.getRange(TreatRow, dayCol).getValue();
-  if (treatTask.title != NoIncludeTBD) {
-    treatTask = Tasks.Tasks.insert(treatTask, taskList.id);
-    ingredientsToSubTasks(treatTask, GetIngredients(treatTask.title, TreatsDBCol));
-  }
+  const createMealTask = (mealRow: number, dbCol: number): GoogleAppsScript.Tasks.Schema.Task => {
+    let task = Tasks.newTask();
+    // if (task.title != NoIncludeTBD) { }
+    task.title = sheet.getRange(mealRow, dayCol).getValue();
+    task = Tasks.Tasks.insert(task, taskList.id);
+    ingredientsToSubTasks(task, GetIngredients(task.title, dbCol));
+    return task;
+  };
 
-  let snacksTask = Tasks.newTask();
-  snacksTask.title = sheet.getRange(SnacksRow, dayCol).getValue();
-  if (snacksTask.title != NoIncludeTBD) {
-    snacksTask = Tasks.Tasks.insert(snacksTask, taskList.id);
-    ingredientsToSubTasks(snacksTask, GetIngredients(snacksTask.title, SnacksDBCol));
-  }
+  let treatTask = createMealTask(TreatRow, TreatsDBCol);
+  let snacksTask = createMealTask(SnacksRow, SnacksDBCol);
+  let dinnerSideTask = createMealTask(DinnerSideRow, SidesDBCol);
+  let dinnerTask = createMealTask(DinnerRow, DinnerDBCol);
+  let lunchSideTask = createMealTask(LunchSideRow, SidesDBCol);
+  let lunchTask = createMealTask(LunchRow, LunchDBCol);
+  let breakfastTask = createMealTask(BreakfastRow, BreakfastDBCol);
 
-  let dinnerTask = Tasks.newTask();
-  dinnerTask.title = sheet.getRange(DinnerRow, dayCol).getValue();
-  if (dinnerTask.title != NoIncludeTBD) {
-    dinnerTask = Tasks.Tasks.insert(dinnerTask, taskList.id);
-    ingredientsToSubTasks(dinnerTask, GetIngredients(dinnerTask.title, LunchAndDinnerDBCol));
-  }
-
-  let lunchTask = Tasks.newTask();
-  lunchTask.title = sheet.getRange(LunchRow, dayCol).getValue();
-  if (lunchTask.title != NoIncludeTBD) {
-    lunchTask = Tasks.Tasks.insert(lunchTask, taskList.id);
-    ingredientsToSubTasks(lunchTask, GetIngredients(lunchTask.title, LunchAndDinnerDBCol));
-  }
   // Add artificial sleep so we don't exceed quota 
   Utilities.sleep(750);
-  return [ lunchTask, dinnerTask, snacksTask, treatTask ];
+  return [ breakfastTask, lunchTask, lunchSideTask, dinnerTask, dinnerSideTask, snacksTask, treatTask ];
 }
 
 /**
