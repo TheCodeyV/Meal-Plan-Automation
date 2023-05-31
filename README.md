@@ -1,9 +1,12 @@
 # Overview
-Meal-Plan-Automation is a Google Sheet tool importing selected data into Google Tasks by category including assigned upcoming date. Each meal converts into  a google task with ingredients created as subtasks. As a result, running Meal-Plan-Automation creates a grocery list in Google Tasks based on the meals selected in the Google Sheet. 
+Meal-Plan-Automation is a Google Sheet tool that imports selected data into Google Tasks by category including respective upcoming date. Each meal converts into  a google task with ingredients created as subtasks. As a result, running Meal-Plan-Automation creates a grocery list in Google Tasks based on the meals selected in the Google Sheet. 
 
 # Additional Tool Features
 - For dropdowns left unselected, the tool will skip the meal and not create a task.
 - The ability to reset all dropdowns to default titles to choose new meals for the next week.
+
+# Screenshot: Tool Menu in Google Sheet
+![image](https://github.com/c0de-e/Meal-Plan-Automation/assets/111247311/600b8bb8-c15d-4240-ac58-082b19bf76c7)
 
 # Screenshot: Google Sheet Format 
 ![image](https://user-images.githubusercontent.com/111247311/232287022-e25c99b6-3d92-4c2c-bb01-fbbf83089432.png)
